@@ -33,7 +33,7 @@ const handleSearch = () => {
       <div class="container header-content">
         <div class="logo" @click="handleNavClick('/')">
           <el-icon :size="32" color="#fff"><Monitor /></el-icon>
-          <span class="logo-text">企业ITIT知识门户</span>
+          <span class="logo-text">企业IT知识门户</span>
         </div>
         <nav class="nav">
           <div
@@ -69,8 +69,8 @@ const handleSearch = () => {
     <footer class="footer">
       <div class="container footer-content">
         <div class="footer-info">
-          <p>企业IT集团信息技术部 © 2026</p>
-          <p>IT服务热线：8000 | 邮箱：it@haike.com</p>
+          <p>信息技术部 © 2026</p>
+          <p>IT服务热线：8000 | 邮箱：it@example.com</p>
         </div>
         <div class="footer-links">
           <span @click="router.push('/')">首页</span>
