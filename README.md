@@ -108,76 +108,146 @@ it-knowledge-portal/
 └── vite.config.ts
 ```
 
-## 安装部署
+## 项目说明
 
-### 环境要求
+本项目分为两个部分：
 
-- Node.js >= 18.x
-- npm >= 9.x 或 pnpm >= 8.x
-- Docker (可选，用于生产部署)
+| 目录 | 说明 | 使用场景 |
+|------|------|----------|
+| `it-knowledge-portal/` | 前端 Vue 3 SPA | 界面展示、用户交互 |
+| `it-services-backend/` | 后端 Node.js API | 数据处理、业务逻辑、数据库 |
 
-### 快速开始
+### 快速部署（Docker，推荐）
 
 ```bash
-# 1. 克隆项目
+# 克隆项目
 git clone https://github.com/lcq225/ITservices.git
-cd ITservices/it-knowledge-portal
+cd ITservices
 
-# 2. 安装依赖
-npm install
-
-# 3. 开发模式运行
-npm run dev
-```
-
-访问 http://localhost:5173
-
-### 生产构建
-
-```bash
-npm run build
-```
-
-构建产物在 `dist/` 目录
-
-### Docker 部署
-
-```bash
 # 启动所有服务（前端 + 后端 + 数据库）
 docker-compose up -d
 
 # 访问 http://localhost
 ```
 
-### 端口说明
+### 手动部署（前端 + 后端分离）
 
-| 场景 | 端口 | 说明 |
-|------|------|------|
-| 开发模式 | 5173 | Vite 开发服务器（热更新） |
-| Docker 生产 | 80 | Nginx 对外端口（静态页面） |
-| 后端 API | 3000 | Node.js API 服务（内部） |
-| 数据库 | 5432 | PostgreSQL（内部） |
-| 缓存 | 6379 | Redis（内部） |
+**前端部署：**
+```bash
+cd it-knowledge-portal
+npm install
+npm run dev        # 开发模式 http://localhost:5173
+npm run build      # 生产构建
+```
 
-### 项目配置文件
+**后端部署：**
+```bash
+cd it-services-backend
+npm install
+npx prisma generate
+npx prisma db push
+npx prisma db seed  # 创建测试数据
+npm run dev          # 开发模式 http://localhost:3000
+```
 
-| 文件 | 用途 |
+### 测试账号
+
+| 角色 | 用户名 | 密码 |
+|------|--------|------|
+| 管理员 | admin | admin123 |
+| IT人员 | zhangmh | it123456 |
+
+### 技术栈
+
+#### 前端 (it-knowledge-portal)
+| 类别 | 技术 |
 |------|------|
-| `.env.example` | 环境变量模板 |
-| `.env.development` | 开发环境变量 |
-| `vite.config.ts` | Vite 配置 |
-| `nginx.conf` | Nginx 配置 |
-| `docker-compose.yml` | Docker 编排 |
-| `Dockerfile` | Docker 构建配置 |
+| 框架 | Vue 3 + Composition API |
+| 构建工具 | Vite |
+| 语言 | TypeScript |
+| UI组件库 | Element Plus |
+| 富文本编辑器 | wangeditor |
+| 路由 | Vue Router |
+| 状态管理 | Pinia |
 
-## 后续优化建议
+#### 后端 (it-services-backend)
+| 类别 | 技术 |
+|------|------|
+| 框架 | Node.js + Express |
+| ORM | Prisma |
+| 数据库 | PostgreSQL |
+| 认证 | JWT |
+| 文件上传 | Multer |
+| 实时通信 | Socket.IO |
+| WebSocket | |
 
-1. **对接后端API**：将Mock数据替换为真实API接口
-2. **用户认证**：实现登录注册和权限管理
-3. **附件存储**：集成文件上传到OSS/S3等对象存储
-4. **全文搜索**：集成Elasticsearch或类似搜索引擎
-5. **消息通知**：WebSocket实现实时消息推送
-6. **数据统计**：添加访问日志和用户行为分析
+## 项目结构
+
+```
+ITservices/
+├── it-knowledge-portal/        # 前端项目
+│   ├── src/
+│   │   ├── api/              # API 接口
+│   │   ├── components/       # 公共组件
+│   │   ├── router/           # 路由配置
+│   │   ├── stores/           # Pinia 状态管理
+│   │   ├── types/           # TypeScript 类型
+│   │   ├── utils/           # 工具函数
+│   │   │   ├── socket.ts   # WebSocket 客户端
+│   │   │   └── search.ts   # 搜索服务
+│   │   └── views/           # 页面视图
+│   ├── screenshots/          # 界面截图
+│   ├── .env.example         # 环境变量模板
+│   ├── vite.config.ts       # Vite 配置（含 API 代理）
+│   ├── docker-compose.yml   # Docker 编排
+│   └── Dockerfile           # 前端 Docker 构建
+│
+├── it-services-backend/       # 后端项目
+│   ├── src/
+│   │   ├── controllers/      # 控制器
+│   │   ├── middleware/       # 中间件（认证、验证）
+│   │   ├── routes/          # 路由
+│   │   ├── types/          # 类型定义
+│   │   └── index.ts        # 入口文件
+│   ├── prisma/
+│   │   ├── schema.prisma  # 数据库模型
+│   │   └── seed.ts         # 种子数据
+│   ├── uploads/            # 文件上传目录
+│   ├── .env.example        # 环境变量模板
+│   └── Dockerfile          # 后端 Docker 构建
+│
+├── docker-compose.yml         # 完整服务编排
+└── README.md                 # 项目说明文档
+```
+
+## 端口说明
+
+| 服务 | 端口 | 访问方式 |
+|------|------|----------|
+| Nginx | 80 | 浏览器直接访问 |
+| Vite Dev | 5173 | 前端开发模式 |
+| Node.js API | 3000 | 后端接口 |
+| PostgreSQL | 5432 | 数据库（内部） |
+| Redis | 6379 | 缓存（内部） |
+
+## API 接口
+
+### 认证接口
+- `POST /api/auth/login` - 用户登录
+- `GET /api/auth/current` - 获取当前用户
+
+### 业务接口
+- `GET/POST /api/articles` - 文章列表/创建
+- `GET/PUT/DELETE /api/articles/:id` - 文章详情/更新/删除
+- `GET/POST /api/questions` - 问题列表/创建
+- `POST /api/questions/:id/answers` - 回答问题
+- `GET /api/systems` - 系统列表
+- `POST /api/attachments` - 上传附件
+
+## 版本
+
+- **v0.1** - 仅前端版本，包含UI和Mock数据
+- **v0.2** - 完整版本，包含前端+后端API+JWT认证+WebSocket
 
 ## License
 
