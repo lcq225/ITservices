@@ -12,7 +12,7 @@ import {
   QuestionFilled,
   User,
   Lightning,
-  Fire,
+  StarFilled,
   Tickets,
   DArrowRight,
   View,
@@ -172,7 +172,7 @@ const handleBannerChange = (index: number) => {
       <section class="section">
         <div class="section-header">
           <h2 class="section-title">
-            <el-icon class="title-icon fire"><Fire /></el-icon>
+            <el-icon class="title-icon fire"><StarFilled /></el-icon>
             热门知识
           </h2>
           <el-button text type="primary" @click="router.push('/knowledge')">查看更多</el-button>
