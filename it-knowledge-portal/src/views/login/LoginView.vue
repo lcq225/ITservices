@@ -41,9 +41,21 @@ const handleLogin = async () => {
   <div class="login-page">
     <div class="login-card">
       <div class="login-header">
-        <el-icon :size="48" color="#409EFF"><Monitor /></el-icon>
-        <h1>企业IT知识门户</h1>
-        <p>请登录以继续</p>
+        <div class="login-logo">
+          <svg width="48" height="48" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="url(#loginLogoGrad)"/>
+            <path d="M8 16L14 22L24 10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="loginLogoGrad" x1="0" y1="0" x2="32" y2="32">
+                <stop stop-color="#0070F3"/>
+                <stop offset="1" stop-color="#00D4FF"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span>企业IT门户</span>
+        </div>
+        <h1>欢迎回来</h1>
+        <p>请登录以继续访问IT服务</p>
       </div>
 
       <el-form :model="loginForm" class="login-form">
@@ -91,51 +103,97 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0052D4 0%, #0070F3 50%, #00D4FF 100%);
+  padding: 20px;
 }
 
 .login-card {
   width: 400px;
-  padding: 40px;
+  padding: 48px;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
 .login-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.login-logo svg {
+  width: 48px;
+  height: 48px;
+}
+
+.login-logo span {
+  font-size: 24px;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .login-header h1 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  margin: 16px 0 8px;
-  color: #303133;
+  margin: 0 0 8px;
+  color: var(--text-primary);
 }
 
 .login-header p {
-  color: #909399;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
 .login-form {
-  margin-top: 24px;
+  margin-top: 32px;
+}
+
+.login-form :deep(.el-input__wrapper) {
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  box-shadow: none;
+  border: 1.5px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.login-form :deep(.el-input__wrapper:hover),
+.login-form :deep(.el-input__wrapper.is-focus) {
+  border-color: var(--primary-color);
 }
 
 .login-button {
   width: 100%;
+  height: 48px;
+  font-size: 16px;
+  border-radius: var(--radius-sm);
+  background: var(--gradient-primary);
+  border: none;
+  margin-top: 8px;
+}
+
+.login-button:hover {
+  box-shadow: 0 8px 24px rgba(0, 112, 243, 0.35);
 }
 
 .login-footer {
   text-align: center;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
 }
 
 .login-footer p {
-  color: #909399;
-  font-size: 12px;
+  color: var(--text-muted);
+  font-size: 13px;
 }
 </style>

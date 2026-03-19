@@ -163,16 +163,16 @@ const handleCreateClick = () => {
 
 .main-content {
   background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
 }
 
 .content-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .content-header .page-title {
@@ -182,11 +182,16 @@ const handleCreateClick = () => {
 }
 
 .filter-bar {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .search-input {
   max-width: 400px;
+}
+
+.search-input :deep(.el-input__wrapper) {
+  border-radius: 20px;
+  padding: 8px 16px;
 }
 
 .articles-list {
@@ -198,11 +203,25 @@ const handleCreateClick = () => {
 .article-card {
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: 20px;
   background: var(--bg-color);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.article-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+  transition: height 0.3s ease;
 }
 
 .article-card:hover {
@@ -210,8 +229,12 @@ const handleCreateClick = () => {
   transform: translateX(4px);
 }
 
+.article-card:hover::before {
+  height: 40px;
+}
+
 .article-title {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   margin: 0 0 8px;
   color: var(--text-primary);
@@ -221,7 +244,7 @@ const handleCreateClick = () => {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 12px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .article-meta {
@@ -245,6 +268,9 @@ const handleCreateClick = () => {
   gap: 4px;
   color: var(--text-muted);
   font-size: 13px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 8px;
 }
 
 .sidebar {
@@ -254,16 +280,19 @@ const handleCreateClick = () => {
 }
 
 .sidebar-card {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .sidebar-card :deep(.el-card__header) {
-  padding: 12px 16px;
+  padding: 16px 20px;
   background: var(--bg-color);
+  border-bottom: none;
 }
 
 .card-header {
   font-weight: 600;
+  font-size: 15px;
 }
 
 .filter-list {
@@ -273,17 +302,19 @@ const handleCreateClick = () => {
 }
 
 .filter-item {
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
   color: var(--text-secondary);
+  font-size: 14px;
 }
 
 .filter-item:hover,
 .filter-item.active {
   background: var(--primary-light);
   color: var(--primary-color);
+  font-weight: 500;
 }
 
 .tag-list {
@@ -294,12 +325,14 @@ const handleCreateClick = () => {
 
 .tag-item {
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
+  border-radius: var(--radius-sm);
 }
 
 .tag-item:hover,
 .tag-item.active {
-  background: var(--primary-color);
+  background: var(--gradient-primary);
   color: #fff;
+  border-color: var(--primary-color);
 }
 </style>

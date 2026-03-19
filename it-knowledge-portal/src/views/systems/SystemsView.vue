@@ -88,24 +88,36 @@ const handleSystemClick = (id: number) => {
 
 .system-card {
   background: #fff;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: var(--radius-md);
+  padding: 24px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.system-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--gradient-primary);
 }
 
 .system-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
 }
 
 .system-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .system-info {
@@ -125,17 +137,13 @@ const handleSystemClick = (id: number) => {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 16px;
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.7;
 }
 
 .system-meta {
   display: flex;
   gap: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   color: var(--text-muted);
   font-size: 14px;
 }
@@ -143,7 +151,7 @@ const handleSystemClick = (id: number) => {
 .system-meta span {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .system-docs {
@@ -151,6 +159,8 @@ const handleSystemClick = (id: number) => {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
 }
 
 .docs-label {

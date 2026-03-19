@@ -63,42 +63,65 @@ const getStatusType = (status: string) => status === 'online' ? 'success' : 'inf
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
   margin-bottom: 40px;
 }
 
 .team-card {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.team-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
 }
 
 .member-header {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   align-items: center;
+  margin-bottom: 20px;
+}
+
+.member-avatar {
+  border: 3px solid var(--border-color);
+  transition: border-color 0.2s ease;
+}
+
+.team-card:hover .member-avatar {
+  border-color: var(--primary-color);
 }
 
 .member-name {
   font-size: 20px;
   font-weight: 600;
   margin: 0 0 4px;
+  color: var(--text-primary);
 }
 
 .member-title {
   color: var(--text-secondary);
   margin: 0 0 8px;
+  font-size: 14px;
 }
 
 .member-details {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .member-details p {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin: 0;
   font-size: 14px;
   color: var(--text-secondary);
@@ -109,29 +132,29 @@ const getStatusType = (status: string) => status === 'online' ? 'success' : 'inf
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 16px;
 }
 
 .expertise-label {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
 .section-title {
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   color: var(--text-primary);
 }
 
 .duty-note {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  padding: 12px;
-  background: var(--primary-light);
-  border-radius: 6px;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(0, 112, 243, 0.08) 0%, rgba(0, 212, 255, 0.08) 100%);
+  border-radius: var(--radius-md);
   color: var(--primary-color);
   font-size: 14px;
 }
