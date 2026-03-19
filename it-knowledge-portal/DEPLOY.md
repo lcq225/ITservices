@@ -301,13 +301,48 @@ CREATE INDEX idx_questions_title ON questions USING gin(to_tsvector('simple', ti
 - 后端验证 Token 有效性
 
 ### SQL注入防护
-- 使用参数化查询或 ORM
+- 使用 Prisma ORM 参数化查询
 - 禁止字符串拼接 SQL
 
 ### 文件上传安全
 - 限制文件类型和大小
 - 文件存储在非 Web 根目录
 - 生成随机文件名
+
+### Rate Limiting 防暴力破解
+- 登录接口：15分钟内最多10次尝试
+- API 接口：每分钟最多100次请求
+- 上传接口：每分钟最多20次上传
+
+### 操作日志审计
+- 所有 API 请求记录日志
+- 敏感操作记录审计日志
+- 日志文件存储在 `logs/` 目录
+
+### Helmet 安全头
+- Content-Security-Policy
+- X-Frame-Options
+- X-Content-Type-Options
+- X-XSS-Protection
+
+### 生产环境安全建议
+
+```bash
+# 1. 设置强 JWT 密钥（至少32位随机字符）
+JWT_SECRET=$(openssl rand -base64 32)
+
+# 2. 设置前端域名
+CORS_ORIGIN="https://your-domain.com"
+
+# 3. 启用 HTTPS（使用 Nginx 反向代理）
+
+# 4. 配置防火墙
+# - 80/443 端口对外开放
+# - 3000/5432/6379 仅内部访问
+
+# 5. 定期备份数据库
+pg_dump it_services > backup_$(date +%Y%m%d).sql
+```
 
 ## 后端 API 对接
 

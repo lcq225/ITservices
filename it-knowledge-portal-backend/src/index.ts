@@ -5,13 +5,19 @@ import { Server as SocketIOServer } from 'socket.io'
 import { config } from './config'
 import { errorHandler } from './middleware/validation'
 import {
+  authLimiter,
+  apiLimiter
+} from './middleware/rateLimit'
+import { securityHeaders, requestSanitizer } from './middleware/security'
+import { auditLog } from './middleware/audit'
+import {
   authRoutes,
   articleRoutes,
   questionRoutes,
   systemRoutes,
   attachmentRoutes
 } from './routes'
-import { authenticate } from './middleware/auth'
+import logger from './utils/logger'
 
 const app = express()
 const httpServer = createServer(app)
@@ -23,15 +29,22 @@ const io = new SocketIOServer(httpServer, {
   }
 })
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(securityHeaders)
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+  credentials: true
+}))
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+app.use(requestSanitizer)
+app.use(auditLog)
+app.use(apiLimiter)
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authLimiter, authRoutes)
 app.use('/api/articles', articleRoutes)
 app.use('/api/questions', questionRoutes)
 app.use('/api/systems', systemRoutes)
@@ -40,16 +53,16 @@ app.use('/api/attachments', attachmentRoutes)
 app.use(errorHandler)
 
 io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id)
+  logger.info('Socket connected', { socketId: socket.id })
 
   socket.on('join', (room: string) => {
     socket.join(room)
-    console.log(`Socket ${socket.id} joined room: ${room}`)
+    logger.info('Socket joined room', { socketId: socket.id, room })
   })
 
   socket.on('leave', (room: string) => {
     socket.leave(room)
-    console.log(`Socket ${socket.id} left room: ${room}`)
+    logger.info('Socket left room', { socketId: socket.id, room })
   })
 
   socket.on('new-question', (data) => {
@@ -65,7 +78,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id)
+    logger.info('Socket disconnected', { socketId: socket.id })
   })
 })
 
@@ -84,12 +97,13 @@ declare global {
 const PORT = config.port
 
 httpServer.listen(PORT, () => {
+  logger.info(`Server started on port ${PORT}`)
   console.log(`
 ╔════════════════════════════════════════════════════════╗
-║   IT Services Backend API                           ║
-║   Server running on port ${PORT}                         ║
+║   IT Services Backend API                       ║
+║   Server running on port ${PORT}                     ║
 ║   Health check: http://localhost:${PORT}/api/health     ║
-╚════════════════════════════════════════════════════════╝
+╚════════════════════════════════════════════════════╝
   `)
 })
 
