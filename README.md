@@ -115,7 +115,7 @@ it-knowledge-portal/
 | 目录 | 说明 | 使用场景 |
 |------|------|----------|
 | `it-knowledge-portal/` | 前端 Vue 3 SPA | 界面展示、用户交互 |
-| `it-services-backend/` | 后端 Node.js API | 数据处理、业务逻辑、数据库 |
+| `it-knowledge-portal-backend/` | 后端 Node.js API | 数据处理、业务逻辑、数据库 |
 
 ### 快速部署（Docker，推荐）
 
@@ -142,7 +142,7 @@ npm run build      # 生产构建
 
 **后端部署：**
 ```bash
-cd it-services-backend
+cd it-knowledge-portal-backend
 npm install
 npx prisma generate
 npx prisma db push
@@ -202,7 +202,7 @@ ITservices/
 │   ├── docker-compose.yml   # Docker 编排
 │   └── Dockerfile           # 前端 Docker 构建
 │
-├── it-services-backend/       # 后端项目
+├── it-knowledge-portal-backend/       # 后端项目
 │   ├── src/
 │   │   ├── controllers/      # 控制器
 │   │   ├── middleware/       # 中间件（认证、验证）
@@ -249,6 +249,7 @@ ITservices/
 - **v0.1** - 仅前端版本，包含UI和Mock数据
 - **v0.2** - 完整版本，包含前端+后端API+JWT认证+WebSocket
 - **v0.3** - 安全增强版，包含Rate Limiting、日志审计、Helmet安全头
+- **v0.4** - 依赖修复版，修复 `@types/express-rate-limit` 版本问题，添加 Prisma seed 配置
 
 ## License
 
