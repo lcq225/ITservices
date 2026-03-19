@@ -3,13 +3,18 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { articles, systems } from '@/api/mock'
 import type { Article } from '@/types'
+import { truncateText } from '@/utils/xss'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const articlesList = ref<Article[]>([])
 const activeTag = ref('')
 const activeSystem = ref('')
 const searchQuery = ref('')
+
+const canCreate = computed(() => userStore.isIT)
 
 const allTags = computed(() => {
   const tags = new Set<string>()
@@ -28,6 +33,7 @@ const filteredArticles = computed(() => {
 })
 
 const formatDate = (date: string) => date
+const getExcerpt = (content: string) => truncateText(content, 150)
 
 onMounted(() => {
   articlesList.value = articles
@@ -35,6 +41,14 @@ onMounted(() => {
     searchQuery.value = route.query.q as string
   }
 })
+
+const handleCreateClick = () => {
+  if (!userStore.isAuthenticated) {
+    router.push('/login')
+    return
+  }
+  router.push('/knowledge/create')
+}
 </script>
 
 <template>
@@ -45,7 +59,7 @@ onMounted(() => {
           <div class="main-content">
             <div class="content-header">
               <h1 class="page-title">知识库</h1>
-              <el-button type="primary" @click="router.push('/knowledge/create')">
+              <el-button v-if="canCreate" type="primary" @click="handleCreateClick">
                 <el-icon><Plus /></el-icon> 创建知识
               </el-button>
             </div>
@@ -70,7 +84,7 @@ onMounted(() => {
               >
                 <div class="article-main">
                   <h3 class="article-title">{{ article.title }}</h3>
-                  <p class="article-excerpt" v-html="article.content.substring(0, 150) + '...'"></p>
+                  <p class="article-excerpt">{{ getExcerpt(article.content) }}</p>
                   <div class="article-meta">
                     <el-tag v-for="tag in article.tags" :key="tag" size="small">{{ tag }}</el-tag>
                     <span class="meta-item"><el-icon><User /></el-icon> {{ article.author }}</span>

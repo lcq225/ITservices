@@ -1,11 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { useUserStore } from '@/stores/user'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/views/home/HomeView.vue'),
     meta: { title: '首页' }
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/LoginView.vue'),
+    meta: { title: '登录', guest: true }
   },
   {
     path: '/systems',
@@ -30,12 +37,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/knowledge/create',
     component: () => import('@/views/knowledge/KnowledgeEditor.vue'),
-    meta: { title: '创建知识', requiresAuth: true }
+    meta: { title: '创建知识', requiresAuth: true, requiresIT: true }
   },
   {
     path: '/knowledge/edit/:id',
     component: () => import('@/views/knowledge/KnowledgeEditor.vue'),
-    meta: { title: '编辑知识', requiresAuth: true }
+    meta: { title: '编辑知识', requiresAuth: true, requiresIT: true }
   },
   {
     path: '/news',
@@ -70,7 +77,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/admin',
     component: () => import('@/views/admin/AdminView.vue'),
-    meta: { title: '管理后台', requiresAuth: true }
+    meta: { title: '管理后台', requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
   }
 ]
 
@@ -81,7 +92,31 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
+  const userStore = useUserStore()
   document.title = `${to.meta.title || 'IT知识门户'} - 企业IT`
+
+  if (to.meta.guest && userStore.isAuthenticated) {
+    next('/')
+    return
+  }
+
+  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+    next({ path: '/login', query: { redirect: to.fullPath } })
+    return
+  }
+
+  if (to.meta.requiresAdmin && !userStore.isAdmin) {
+    ElMessage.error('您没有权限访问管理后台')
+    next('/')
+    return
+  }
+
+  if (to.meta.requiresIT && !userStore.isIT) {
+    ElMessage.error('只有IT人员可以创建或编辑知识')
+    next('/knowledge')
+    return
+  }
+
   next()
 })
 

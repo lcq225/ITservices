@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { questions, answers } from '@/api/mock'
+import { sanitizeHTML } from '@/utils/xss'
 
 const route = useRoute()
 const router = useRouter()
 const question = ref(questions[0])
 const answersList = ref<typeof answers>([])
+
+const getSafeContent = (html: string) => sanitizeHTML(html)
 
 onMounted(() => {
   const id = Number(route.params.id)
@@ -17,9 +21,23 @@ onMounted(() => {
   }
 })
 
-const handleLike = (answerId: number) => {
-  const answer = answersList.value.find(a => a.id === answerId)
-  if (answer) answer.likes++
+const handleLike = async (answerId: number) => {
+  try {
+    const answer = answersList.value.find(a => a.id === answerId)
+    if (answer) answer.likes++
+    ElMessage.success('点赞成功')
+  } catch {
+    ElMessage.error('点赞失败')
+  }
+}
+
+const handleQuestionLike = async () => {
+  try {
+    question.value.likes++
+    ElMessage.success('点赞成功')
+  } catch {
+    ElMessage.error('点赞失败')
+  }
 }
 </script>
 
@@ -50,7 +68,7 @@ const handleLike = (answerId: number) => {
         </div>
         
         <div class="question-actions">
-          <el-button @click="question.likes++">
+          <el-button @click="handleQuestionLike">
             <el-icon><Star /></el-icon> 点赞 ({{ question.likes }})
           </el-button>
           <span class="views">浏览 {{ question.views }}</span>
@@ -68,7 +86,7 @@ const handleLike = (answerId: number) => {
               <el-tag v-if="answer.isAccepted" type="success" size="small">已采纳</el-tag>
             </div>
           </div>
-          <div class="answer-content" v-html="answer.content"></div>
+          <div class="answer-content" v-html="getSafeContent(answer.content)"></div>
           <div class="answer-actions">
             <el-button size="small" @click="handleLike(answer.id)">
               <el-icon><Star /></el-icon> 点赞 ({{ answer.likes }})

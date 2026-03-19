@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-const activeIndex = ref('/')
+const route = useRoute()
+const userStore = useUserStore()
+
+const activeIndex = computed(() => route.path)
+
+const isActive = (path: string) => activeIndex.value === path
 
 const navItems = [
   { path: '/', name: '首页' },
@@ -15,7 +22,6 @@ const navItems = [
 ]
 
 const handleNavClick = (path: string) => {
-  activeIndex.value = path
   router.push(path)
 }
 
@@ -25,6 +31,27 @@ const handleSearch = () => {
     router.push({ path: '/knowledge', query: { q: searchQuery.value } })
   }
 }
+
+const handleLoginClick = () => {
+  router.push('/login')
+}
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    await userStore.logout()
+    ElMessage.success('已退出登录')
+    router.push('/')
+  } catch {
+    // cancelled
+  }
+}
+
+const showAdminLink = computed(() => userStore.isAdmin)
 </script>
 
 <template>
@@ -40,7 +67,7 @@ const handleSearch = () => {
             v-for="item in navItems"
             :key="item.path"
             class="nav-item"
-            :class="{ active: activeIndex === item.path }"
+            :class="{ active: isActive(item.path) }"
             @click="handleNavClick(item.path)"
           >
             {{ item.name }}
@@ -57,9 +84,30 @@ const handleSearch = () => {
               <el-icon><Search /></el-icon>
             </template>
           </el-input>
-          <el-avatar :size="36" style="cursor: pointer">
-            <el-icon :size="20"><User /></el-icon>
-          </el-avatar>
+          
+          <template v-if="userStore.isAuthenticated">
+            <el-dropdown @command="(cmd: string) => cmd === 'logout' ? handleLogout() : router.push('/admin')">
+              <div class="user-info">
+                <el-avatar :size="36" :src="userStore.user?.avatar">
+                  {{ userStore.user?.nickname?.[0] }}
+                </el-avatar>
+                <span class="username">{{ userStore.user?.nickname }}</span>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="admin" v-if="showAdminLink">
+                    <el-icon><Setting /></el-icon> 管理后台
+                  </el-dropdown-item>
+                  <el-dropdown-item command="logout" divided>
+                    <el-icon><SwitchButton /></el-icon> 退出登录
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
+          <template v-else>
+            <el-button type="primary" @click="handleLoginClick">登录</el-button>
+          </template>
         </div>
       </div>
     </header>
@@ -75,7 +123,7 @@ const handleSearch = () => {
         <div class="footer-links">
           <span @click="router.push('/')">首页</span>
           <span @click="router.push('/team')">IT团队</span>
-          <span @click="router.push('/admin')">管理后台</span>
+          <span v-if="showAdminLink" @click="router.push('/admin')">管理后台</span>
         </div>
       </div>
     </footer>
@@ -203,5 +251,24 @@ const handleSearch = () => {
 
 .footer-links span:hover {
   color: #fff;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.username {
+  color: #fff;
+  font-size: 14px;
 }
 </style>

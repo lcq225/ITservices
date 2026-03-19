@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { articles, systems } from '@/api/mock'
+import { sanitizeHTML } from '@/utils/xss'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const article = ref(articles[0])
 const system = ref(systems[0])
+
+const safeContent = computed(() => sanitizeHTML(article.value.content))
+const canEdit = computed(() => userStore.isIT)
 
 const formatFileSize = (bytes: number) => {
   if (bytes < 1024) return bytes + ' B'
@@ -26,8 +33,21 @@ onMounted(() => {
   }
 })
 
-const handleLike = () => {
-  article.value.likes++
+const handleLike = async () => {
+  try {
+    article.value.likes++
+    ElMessage.success('点赞成功')
+  } catch {
+    ElMessage.error('点赞失败')
+  }
+}
+
+const handleEdit = () => {
+  if (!userStore.isAuthenticated) {
+    router.push('/login')
+    return
+  }
+  router.push(`/knowledge/edit/${article.value.id}`)
 }
 </script>
 
@@ -52,13 +72,13 @@ const handleLike = () => {
         
         <el-divider />
         
-        <div class="article-content" v-html="article.content"></div>
+        <div class="article-content" v-html="safeContent"></div>
         
         <div class="article-actions">
           <el-button @click="handleLike">
             <el-icon><Star /></el-icon> 点赞 ({{ article.likes }})
           </el-button>
-          <el-button @click="router.push(`/knowledge/edit/${article.id}`)">
+          <el-button v-if="canEdit" @click="handleEdit">
             <el-icon><Edit /></el-icon> 编辑
           </el-button>
         </div>
