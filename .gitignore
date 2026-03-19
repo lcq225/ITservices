@@ -100,6 +100,12 @@
 **/vendor/bundle
 **/.byebug_history
 
+# Vite build output
+it-knowledge-portal/dist
+it-knowledge-portal/node_modules
+it-knowledge-portal/.DS_Store
+*.local
+
 # Logs
 *.log
 **/logs/
