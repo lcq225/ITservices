@@ -3,12 +3,11 @@ export interface System {
   name: string
   code: string
   category: string
-  description: string
-  manager: string
-  managerPhone: string
-  department: string
+  description?: string
+  manager?: { id: number; nickname: string; phone?: string }
+  managerId?: number
   docLinks: { name: string; url: string }[]
-  status: 'online' | 'offline' | 'maintenance'
+  status: 'ONLINE' | 'OFFLINE' | 'MAINTENANCE'
   createdAt: string
   updatedAt: string
 }
@@ -17,17 +16,24 @@ export interface Article {
   id: number
   title: string
   content: string
-  type: 'knowledge' | 'news'
+  type: 'KNOWLEDGE' | 'NEWS'
   systemId?: number
-  author: string
+  author: AuthorInfo
   authorId: number
   tags: string[]
   attachments: Attachment[]
   views: number
   likes: number
-  status: 'draft' | 'published'
+  status: 'DRAFT' | 'PUBLISHED'
   createdAt: string
   updatedAt: string
+}
+
+export interface AuthorInfo {
+  id: number
+  nickname: string
+  avatar?: string
+  role: string
 }
 
 export interface Attachment {
@@ -41,15 +47,17 @@ export interface Attachment {
 export interface User {
   id: number
   username: string
-  nickname: string
-  avatar: string
-  role: 'it' | 'admin' | 'user'
-  phone: string
-  email: string
-  department: string
-  title: string
-  expertise: string[]
-  status: 'online' | 'offline'
+  nickname?: string
+  avatar?: string
+  role: 'USER' | 'IT' | 'ADMIN'
+  phone?: string
+  email?: string
+  department?: string
+  title?: string
+  expertise?: string[]
+  status: 'ONLINE' | 'OFFLINE'
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Question {
@@ -57,8 +65,7 @@ export interface Question {
   title: string
   content: string
   authorId: number
-  author: string
-  authorAvatar: string
+  author: AuthorInfo
   tags: string[]
   answerCount: number
   views: number
@@ -73,8 +80,7 @@ export interface Answer {
   questionId: number
   content: string
   authorId: number
-  author: string
-  authorAvatar: string
+  author: AuthorInfo
   isAccepted: boolean
   likes: number
   createdAt: string
@@ -86,4 +92,18 @@ export interface Banner {
   image: string
   link: string
   type: 'notice' | 'activity' | 'system'
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean
+  message?: string
+  data?: T
+  error?: string
+}
+
+export interface PaginatedResponse<T> {
+  list: T[]
+  total: number
+  page: number
+  pageSize: number
 }

@@ -1,0 +1,149 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
+  password    String
+  nickname    String?
+  avatar      String?
+  role        Role      @default(USER)
+  phone       String?
+  email       String?
+  department  String?
+  title       String?
+  expertise   String[]
+  status      UserStatus @default(ONLINE)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  articles    Article[]
+  questions   Question[]
+  answers     Answer[]
+  systems     System[]   @relation("SystemManager")
+}
+
+enum Role {
+  USER
+  IT
+  ADMIN
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+}
+
+model System {
+  id          Int       @id @default(autoincrement())
+  name        String
+  code        String    @unique
+  category    String
+  description String?
+  managerId   Int?
+  manager     User?     @relation("SystemManager", fields: [managerId], references: [id])
+  docLinks    Json      @default("[]")
+  status      SystemStatus @default(ONLINE)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  articles    Article[]
+  questions   Question[]
+
+  @@index([category])
+}
+
+enum SystemStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+}
+
+model Article {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  type        ArticleType
+  systemId    Int?
+  system      System?   @relation(fields: [systemId], references: [id])
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id])
+  tags        String[]
+  views       Int       @default(0)
+  likes       Int       @default(0)
+  status      ArticleStatus @default(DRAFT)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  attachments Attachment[]
+
+  @@index([type])
+  @@index([authorId])
+  @@index([systemId])
+}
+
+enum ArticleType {
+  KNOWLEDGE
+  NEWS
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Attachment {
+  id          Int       @id @default(autoincrement())
+  fileName    String
+  filePath    String
+  fileSize    BigInt
+  fileType    String
+  articleId   Int?
+  article     Article?  @relation(fields: [articleId], references: [id])
+  uploaderId  Int
+  createdAt   DateTime  @default(now())
+}
+
+model Question {
+  id                Int       @id @default(autoincrement())
+  title             String
+  content           String
+  authorId          Int
+  author            User      @relation(fields: [authorId], references: [id])
+  tags              String[]
+  answerCount       Int       @default(0)
+  views             Int       @default(0)
+  likes             Int       @default(0)
+  hasAcceptedAnswer Boolean   @default(false)
+  systemId          Int?
+  system            System?   @relation(fields: [systemId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  answers           Answer[]
+
+  @@index([authorId])
+  @@index([systemId])
+}
+
+model Answer {
+  id          Int       @id @default(autoincrement())
+  content     String
+  questionId  Int
+  question    Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id])
+  isAccepted  Boolean   @default(false)
+  likes       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([questionId])
+  @@index([authorId])
+}

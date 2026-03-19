@@ -339,25 +339,123 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 ```
 it-knowledge-portal/
-├── src/
-│   ├── api/
-│   │   ├── request.ts          # Axios 封装
-│   │   ├── services/           # API 服务
-│   │   └── mock.ts             # Mock数据
-│   ├── assets/                 # 静态资源
+├── src/                        # 前端源码
+│   ├── api/                    # API 接口
+│   │   ├── request.ts         # Axios 封装
+│   │   ├── services/          # API 服务
+│   │   └── mock.ts            # Mock 数据
+│   ├── assets/                # 静态资源
 │   ├── components/             # 公共组件
-│   ├── router/                 # 路由配置
-│   ├── stores/                 # Pinia 状态管理
-│   ├── types/                  # TypeScript类型
-│   ├── utils/                  # 工具函数 (XSS防护等)
-│   └── views/                  # 页面视图
-├── .env.example                # 环境变量模板
-├── .env.development           # 开发环境变量
+│   ├── router/                # 路由配置
+│   ├── stores/                # Pinia 状态管理
+│   ├── types/                 # TypeScript 类型
+│   ├── utils/                 # 工具函数
+│   │   ├── socket.ts          # WebSocket 服务
+│   │   ├── search.ts          # 搜索服务
+│   │   └── xss.ts            # XSS 防护
+│   └── views/                 # 页面视图
+├── screenshots/               # 界面截图
+├── .env.example               # 环境变量模板
+├── .env.development          # 开发环境变量
+├── vite.config.ts            # Vite 配置（含 API 代理）
 ├── docker-compose.yml         # Docker 编排
-├── Dockerfile                  # Docker 构建
-├── nginx.conf                  # Nginx 配置
+├── Dockerfile                # 前端 Docker 构建
+└── nginx.conf                # Nginx 配置
+
+it-services-backend/           # 后端项目（独立目录）
+├── src/
+│   ├── config/               # 配置文件
+│   ├── controllers/           # 控制器
+│   ├── middleware/           # 中间件
+│   ├── routes/                # 路由
+│   ├── types/                 # 类型定义
+│   ├── utils/                # 工具函数
+│   └── index.ts              # 入口文件
+├── prisma/
+│   ├── schema.prisma         # 数据库模型
+│   └── seed.ts               # 种子数据
+├── uploads/                   # 文件上传目录
+├── .env.example              # 环境变量模板
 └── package.json
 ```
+
+## 后端服务
+
+### 技术栈
+
+- Node.js 18+ / Express
+- Prisma ORM
+- PostgreSQL 15+
+- Socket.IO (WebSocket)
+- JWT 认证
+- Multer (文件上传)
+
+### 快速启动
+
+```bash
+# 1. 进入后端目录
+cd it-services-backend
+
+# 2. 安装依赖
+npm install
+
+# 3. 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件
+
+# 4. 生成 Prisma Client
+npx prisma generate
+
+# 5. 创建数据库表
+npx prisma db push
+
+# 6. 填充种子数据
+npx prisma db seed
+
+# 7. 启动开发服务器
+npm run dev
+```
+
+### 测试账号
+
+| 角色 | 用户名 | 密码 |
+|------|--------|------|
+| 管理员 | admin | admin123 |
+| IT人员 | zhangmh | it123456 |
+
+### API 端点
+
+#### 认证
+- `POST /api/auth/login` - 用户登录
+- `POST /api/auth/logout` - 退出登录
+- `GET /api/auth/current` - 获取当前用户
+
+#### 文章
+- `GET /api/articles` - 获取文章列表
+- `GET /api/articles/:id` - 获取文章详情
+- `POST /api/articles` - 创建文章（需IT角色）
+- `PUT /api/articles/:id` - 更新文章
+- `DELETE /api/articles/:id` - 删除文章
+- `POST /api/articles/:id/like` - 点赞
+
+#### 问题
+- `GET /api/questions` - 获取问题列表
+- `GET /api/questions/:id` - 获取问题详情
+- `POST /api/questions` - 发布问题
+- `DELETE /api/questions/:id` - 删除问题
+- `POST /api/questions/:id/answers` - 回答问题
+- `POST /api/questions/:id/answers/:answerId/accept` - 采纳答案
+
+#### 系统
+- `GET /api/systems` - 获取系统列表
+- `GET /api/systems/:id` - 获取系统详情
+- `POST /api/systems` - 创建系统（需Admin角色）
+- `PUT /api/systems/:id` - 更新系统
+- `DELETE /api/systems/:id` - 删除系统
+
+#### 附件
+- `POST /api/attachments` - 上传附件
+- `DELETE /api/attachments/:id` - 删除附件
 
 ## 技术支持
 
