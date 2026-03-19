@@ -91,7 +91,7 @@ const handleLogin = async () => {
       </el-form>
 
       <div class="login-footer">
-        <p>默认账号：admin / admin</p>
+        <p>企业IT服务门户 v2.0</p>
       </div>
     </div>
   </div>
@@ -103,16 +103,17 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0052D4 0%, #0070F3 50%, #00D4FF 100%);
+  background: var(--gradient-primary);
   padding: 20px;
 }
 
 .login-card {
   width: 400px;
+  max-width: 100%;
   padding: 48px;
-  background: #fff;
+  background: var(--bg-white);
   border-radius: var(--radius-lg);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .login-header {

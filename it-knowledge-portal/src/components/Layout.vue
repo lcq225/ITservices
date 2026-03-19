@@ -180,12 +180,12 @@ const showAdminLink = computed(() => userStore.isAdmin)
 }
 
 .header {
-  background: #fff;
+  background: var(--bg-white);
   border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
 }
 
 .header-content {
@@ -279,7 +279,7 @@ const showAdminLink = computed(() => userStore.isAdmin)
 
 .login-btn {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--bg-white);
   border: none;
   padding: 8px 20px;
   border-radius: 20px;
@@ -317,7 +317,7 @@ const showAdminLink = computed(() => userStore.isAdmin)
 }
 
 .footer {
-  background: linear-gradient(180deg, #F5F8FA 0%, #E8EEF4 100%);
+  background: var(--gradient-footer);
   padding: 48px 0 24px;
   margin-top: auto;
 }

@@ -15,6 +15,7 @@
   --danger-color: #FF3D00;
   --gradient-primary: linear-gradient(135deg, #0070F3 0%, #0052D4 100%);
   --gradient-accent: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+  --gradient-footer: linear-gradient(180deg, #F5F8FA 0%, #E8EEF4 100%);
   --shadow-sm: 0 2px 8px rgba(0, 112, 243, 0.08);
   --shadow-md: 0 4px 16px rgba(0, 112, 243, 0.12);
   --shadow-lg: 0 8px 32px rgba(0, 112, 243, 0.16);

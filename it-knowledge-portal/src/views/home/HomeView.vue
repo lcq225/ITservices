@@ -2,6 +2,23 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { articles, questions, systems } from '@/api/mock'
+import {
+  Bell,
+  Document,
+  ChatDotRound,
+  Monitor,
+  Files,
+  Notebook,
+  QuestionFilled,
+  User,
+  Lightning,
+  Fire,
+  Tickets,
+  DArrowRight,
+  View,
+  Star,
+  ChatLineSquare
+} from '@element-plus/icons-vue'
 
 const router = useRouter()
 
@@ -12,35 +29,32 @@ const banners = [
   {
     id: 1,
     title: 'IT服务门户全新上线',
-    subtitle: '一站式获取IT知识、资讯与支持',
-    icon: '📢'
+    subtitle: '一站式获取IT知识、资讯与支持'
   },
   {
     id: 2,
     title: '知识库已收录100+技术文档',
-    subtitle: '覆盖核心系统操作指南与运维手册',
-    icon: '📚'
+    subtitle: '覆盖核心系统操作指南与运维手册'
   },
   {
     id: 3,
     title: '问答社区已解决500+问题',
-    subtitle: '遇到问题？来这里寻求帮助',
-    icon: '💬'
+    subtitle: '遇到问题？来这里寻求帮助'
   }
 ]
 
 const stats = [
-  { label: 'IT系统', value: systems.length, icon: '🖥️' },
-  { label: '知识文档', value: articles.filter(a => a.type === 'knowledge').length + 10, icon: '📄' },
-  { label: '资讯文章', value: articles.filter(a => a.type === 'news').length + 20, icon: '📰' },
-  { label: '互动问答', value: questions.length + 50, icon: '💭' }
+  { label: 'IT系统', value: systems.length, icon: Monitor },
+  { label: '知识文档', value: articles.filter(a => a.type === 'knowledge').length + 10, icon: Document },
+  { label: '资讯文章', value: articles.filter(a => a.type === 'news').length + 20, icon: Notebook },
+  { label: '互动问答', value: questions.length + 50, icon: QuestionFilled }
 ]
 
 const quickLinks = [
-  { title: '知识库', desc: '技术文档与操作指南', icon: '📚', path: '/knowledge', color: '#0070F3' },
-  { title: '资讯中心', desc: '系统公告与通知', icon: '📢', path: '/news', color: '#00D4FF' },
-  { title: '问答社区', desc: '问题咨询与交流', icon: '💬', path: '/qa', color: '#0099CC' },
-  { title: 'IT团队', desc: '运维人员与值班表', icon: '👥', path: '/team', color: '#00F5A0' }
+  { title: '知识库', desc: '技术文档与操作指南', icon: Document, path: '/knowledge', color: '#0070F3' },
+  { title: '资讯中心', desc: '系统公告与通知', icon: Bell, path: '/news', color: '#00D4FF' },
+  { title: '问答社区', desc: '问题咨询与交流', icon: ChatDotRound, path: '/qa', color: '#0099CC' },
+  { title: 'IT团队', desc: '运维人员与值班表', icon: User, path: '/team', color: '#00F5A0' }
 ]
 
 const hotArticles = articles.filter(a => a.type === 'knowledge').slice(0, 4)
@@ -70,24 +84,22 @@ const handleBannerChange = (index: number) => {
           <h1 class="hero-title">欢迎使用企业IT服务门户</h1>
           <p class="hero-subtitle">轻松获取IT知识、浏览系统公告、解决技术问题</p>
           <div class="hero-search">
-            <input
+            <el-input
               v-model="searchQuery"
-              type="text"
               placeholder="搜索知识、问题、系统..."
               @keyup.enter="handleSearch"
-            />
-            <button class="search-btn" @click="handleSearch">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-              </svg>
-            </button>
+              class="search-input"
+            >
+              <template #prefix>
+                <el-icon><Search /></el-icon>
+              </template>
+            </el-input>
+            <el-button type="primary" class="search-btn" @click="handleSearch">
+              <el-icon><Search /></el-icon>
+            </el-button>
           </div>
           <div class="hero-tags">
-            <span class="tag">ERP系统</span>
-            <span class="tag">VPN连接</span>
-            <span class="tag">账号申请</span>
-            <span class="tag">邮箱设置</span>
+            <el-tag v-for="tag in ['ERP系统', 'VPN连接', '账号申请', '邮箱设置']" :key="tag" effect="plain" round>{{ tag }}</el-tag>
           </div>
         </div>
         <div class="hero-banner">
@@ -98,7 +110,9 @@ const handleBannerChange = (index: number) => {
             :class="{ active: currentBannerIndex === index }"
             @click="currentBannerIndex = index"
           >
-            <span class="banner-icon">{{ banner.icon }}</span>
+            <div class="banner-icon-wrapper">
+              <el-icon class="banner-icon"><Bell /></el-icon>
+            </div>
             <div class="banner-text">
               <h3>{{ banner.title }}</h3>
               <p>{{ banner.subtitle }}</p>
@@ -119,7 +133,9 @@ const handleBannerChange = (index: number) => {
       <!-- Stats Section -->
       <div class="stats-grid">
         <div v-for="stat in stats" :key="stat.label" class="stat-card">
-          <div class="stat-icon">{{ stat.icon }}</div>
+          <div class="stat-icon-wrapper">
+            <el-icon class="stat-icon"><component :is="stat.icon" /></el-icon>
+          </div>
           <div class="stat-info">
             <span class="stat-value">{{ stat.value }}</span>
             <span class="stat-label">{{ stat.label }}</span>
@@ -130,7 +146,7 @@ const handleBannerChange = (index: number) => {
       <!-- Quick Links Section -->
       <section class="section">
         <h2 class="section-title">
-          <span class="title-icon">⚡</span>
+          <el-icon class="title-icon"><Lightning /></el-icon>
           快捷入口
         </h2>
         <div class="quick-grid">
@@ -141,15 +157,13 @@ const handleBannerChange = (index: number) => {
             @click="router.push(link.path)"
           >
             <div class="quick-icon" :style="{ background: `${link.color}15` }">
-              <span style="font-size: 24px">{{ link.icon }}</span>
+              <el-icon :style="{ color: link.color }"><component :is="link.icon" /></el-icon>
             </div>
             <div class="quick-info">
               <h3>{{ link.title }}</h3>
               <p>{{ link.desc }}</p>
             </div>
-            <svg class="quick-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 18l6-6-6-6"/>
-            </svg>
+            <el-icon class="quick-arrow"><DArrowRight /></el-icon>
           </div>
         </div>
       </section>
@@ -158,10 +172,10 @@ const handleBannerChange = (index: number) => {
       <section class="section">
         <div class="section-header">
           <h2 class="section-title">
-            <span class="title-icon">🔥</span>
+            <el-icon class="title-icon fire"><Fire /></el-icon>
             热门知识
           </h2>
-          <button class="more-btn" @click="router.push('/knowledge')">查看更多</button>
+          <el-button text type="primary" @click="router.push('/knowledge')">查看更多</el-button>
         </div>
         <div class="articles-grid">
           <div
@@ -174,22 +188,17 @@ const handleBannerChange = (index: number) => {
               <h3 class="article-title">{{ article.title }}</h3>
               <p class="article-excerpt">{{ article.content.replace(/<[^>]+>/g, '').substring(0, 80) }}...</p>
               <div class="article-tags">
-                <span v-for="tag in article.tags.slice(0, 2)" :key="tag" class="article-tag">{{ tag }}</span>
+                <el-tag v-for="tag in article.tags.slice(0, 2)" :key="tag" size="small" effect="plain">{{ tag }}</el-tag>
               </div>
             </div>
             <div class="article-meta">
               <div class="meta-left">
                 <span class="meta-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </svg>
+                  <el-icon><View /></el-icon>
                   {{ formatViews(article.views) }}
                 </span>
                 <span class="meta-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
+                  <el-icon><Star /></el-icon>
                   {{ article.likes }}
                 </span>
               </div>
@@ -200,16 +209,16 @@ const handleBannerChange = (index: number) => {
       </section>
 
       <!-- Two Column Layout -->
-      <el-row :gutter="24">
+      <el-row :gutter="24" class="two-col-section">
         <!-- Latest News -->
-        <el-col :span="12">
+        <el-col :xs="24" :sm="24" :md="12">
           <section class="section">
             <div class="section-header">
               <h2 class="section-title">
-                <span class="title-icon">📰</span>
+                <el-icon class="title-icon"><Tickets /></el-icon>
                 最新资讯
               </h2>
-              <button class="more-btn" @click="router.push('/news')">查看更多</button>
+              <el-button text type="primary" @click="router.push('/news')">查看更多</el-button>
             </div>
             <div class="news-list">
               <div
@@ -223,7 +232,7 @@ const handleBannerChange = (index: number) => {
                   <h4>{{ news.title }}</h4>
                   <div class="news-meta">
                     <span class="news-date">{{ formatDate(news.createdAt) }}</span>
-                    <span class="news-views">{{ formatViews(news.views) }} 阅读</span>
+                    <span class="news-views"><el-icon><View /></el-icon> {{ formatViews(news.views) }} 阅读</span>
                   </div>
                 </div>
               </div>
@@ -232,14 +241,14 @@ const handleBannerChange = (index: number) => {
         </el-col>
 
         <!-- Hot Questions -->
-        <el-col :span="12">
+        <el-col :xs="24" :sm="24" :md="12">
           <section class="section">
             <div class="section-header">
               <h2 class="section-title">
-                <span class="title-icon">💬</span>
+                <el-icon class="title-icon"><ChatLineSquare /></el-icon>
                 热门问答
               </h2>
-              <button class="more-btn" @click="router.push('/qa')">查看更多</button>
+              <el-button text type="primary" @click="router.push('/qa')">查看更多</el-button>
             </div>
             <div class="qa-list">
               <div
@@ -251,14 +260,12 @@ const handleBannerChange = (index: number) => {
                 <div class="qa-content">
                   <h4>{{ q.title }}</h4>
                   <div class="qa-tags">
-                    <span v-for="tag in q.tags.slice(0, 2)" :key="tag" class="qa-tag">{{ tag }}</span>
+                    <el-tag v-for="tag in q.tags.slice(0, 2)" :key="tag" size="small" effect="plain">{{ tag }}</el-tag>
                   </div>
                 </div>
                 <div class="qa-stats">
                   <span class="qa-answers" :class="{ accepted: q.hasAcceptedAnswer }">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                    </svg>
+                    <el-icon><ChatDotRound /></el-icon>
                     {{ q.answerCount }}
                   </span>
                 </div>
@@ -270,6 +277,13 @@ const handleBannerChange = (index: number) => {
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { Search } from '@element-plus/icons-vue'
+export default {
+  components: { Search }
+}
+</script>
 
 <style scoped>
 .home {
@@ -284,6 +298,12 @@ const handleBannerChange = (index: number) => {
   margin-bottom: 32px;
 }
 
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
 .hero-content {
   background: var(--gradient-primary);
   border-radius: var(--radius-lg);
@@ -291,11 +311,23 @@ const handleBannerChange = (index: number) => {
   color: #fff;
 }
 
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 32px 24px;
+  }
+}
+
 .hero-title {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 12px;
   line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 24px;
+  }
 }
 
 .hero-subtitle {
@@ -306,60 +338,46 @@ const handleBannerChange = (index: number) => {
 
 .hero-search {
   display: flex;
+  gap: 8px;
   background: #fff;
   border-radius: 28px;
-  padding: 6px;
+  padding: 6px 6px 6px 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.hero-search input {
+.search-input {
   flex: 1;
-  border: none;
-  outline: none;
-  padding: 12px 20px;
-  font-size: 15px;
-  color: var(--text-primary);
-  background: transparent;
 }
 
-.hero-search input::placeholder {
-  color: var(--text-muted);
+.search-input :deep(.el-input__wrapper) {
+  box-shadow: none;
+  background: transparent;
 }
 
 .search-btn {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--gradient-primary);
-  border: none;
-  color: #fff;
-  cursor: pointer;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
-}
-
-.search-btn:hover {
-  transform: scale(1.05);
 }
 
 .hero-tags {
   display: flex;
   gap: 8px;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
-.tag {
-  padding: 6px 14px;
+.hero-tags .el-tag {
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  border: none;
+  color: #fff;
 }
 
-.tag:hover {
+.hero-tags .el-tag:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
@@ -367,6 +385,12 @@ const handleBannerChange = (index: number) => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+@media (max-width: 1024px) {
+  .hero-banner {
+    display: none;
+  }
 }
 
 .banner-card {
@@ -388,8 +412,19 @@ const handleBannerChange = (index: number) => {
   border-left: 3px solid var(--primary-color);
 }
 
+.banner-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .banner-icon {
-  font-size: 32px;
+  font-size: 24px;
+  color: var(--primary-color);
 }
 
 .banner-text h3 {
@@ -434,6 +469,18 @@ const handleBannerChange = (index: number) => {
   margin-bottom: 32px;
 }
 
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .stat-card {
   display: flex;
   align-items: center;
@@ -450,15 +497,31 @@ const handleBannerChange = (index: number) => {
   transform: translateY(-2px);
 }
 
+.stat-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .stat-icon {
-  font-size: 32px;
+  font-size: 28px;
+  color: var(--primary-color);
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .stat-value {
   font-size: 28px;
   font-weight: 700;
   color: var(--primary-color);
-  display: block;
+  line-height: 1.2;
 }
 
 .stat-label {
@@ -489,21 +552,11 @@ const handleBannerChange = (index: number) => {
 
 .title-icon {
   font-size: 24px;
-}
-
-.more-btn {
-  background: none;
-  border: none;
   color: var(--primary-color);
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
-.more-btn:hover {
-  text-decoration: underline;
+.title-icon.fire {
+  color: #ff6b35;
 }
 
 /* Quick Links */
@@ -511,6 +564,18 @@ const handleBannerChange = (index: number) => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .quick-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .quick-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .quick-card {
@@ -540,6 +605,10 @@ const handleBannerChange = (index: number) => {
   flex-shrink: 0;
 }
 
+.quick-icon .el-icon {
+  font-size: 28px;
+}
+
 .quick-info {
   flex: 1;
   min-width: 0;
@@ -563,6 +632,7 @@ const handleBannerChange = (index: number) => {
 .quick-arrow {
   color: var(--text-muted);
   flex-shrink: 0;
+  font-size: 18px;
 }
 
 /* Articles Grid */
@@ -570,6 +640,12 @@ const handleBannerChange = (index: number) => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .articles-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .article-card {
@@ -610,14 +686,6 @@ const handleBannerChange = (index: number) => {
   margin-bottom: 12px;
 }
 
-.article-tag {
-  padding: 4px 10px;
-  background: var(--primary-light);
-  color: var(--primary-color);
-  border-radius: 4px;
-  font-size: 12px;
-}
-
 .article-meta {
   display: flex;
   justify-content: space-between;
@@ -642,6 +710,15 @@ const handleBannerChange = (index: number) => {
 .article-author {
   font-size: 13px;
   color: var(--text-muted);
+}
+
+/* Two Column Section */
+.two-col-section {
+  margin: 0 -12px;
+}
+
+.two-col-section .el-col {
+  padding: 0 12px;
 }
 
 /* News List */
@@ -676,6 +753,10 @@ const handleBannerChange = (index: number) => {
   flex-shrink: 0;
 }
 
+.news-content {
+  flex: 1;
+}
+
 .news-content h4 {
   font-size: 15px;
   font-weight: 500;
@@ -689,6 +770,12 @@ const handleBannerChange = (index: number) => {
   gap: 12px;
   font-size: 12px;
   color: var(--text-muted);
+}
+
+.news-views {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* QA List */
@@ -715,6 +802,11 @@ const handleBannerChange = (index: number) => {
   transform: translateX(4px);
 }
 
+.qa-content {
+  flex: 1;
+  min-width: 0;
+}
+
 .qa-content h4 {
   font-size: 15px;
   font-weight: 500;
@@ -728,16 +820,9 @@ const handleBannerChange = (index: number) => {
   gap: 8px;
 }
 
-.qa-tag {
-  padding: 2px 8px;
-  background: var(--bg-color);
-  color: var(--text-secondary);
-  border-radius: 4px;
-  font-size: 12px;
-}
-
 .qa-stats {
   flex-shrink: 0;
+  margin-left: 16px;
 }
 
 .qa-answers {
