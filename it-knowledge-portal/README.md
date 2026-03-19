@@ -114,17 +114,19 @@ it-knowledge-portal/
 
 - Node.js >= 18.x
 - npm >= 9.x 或 pnpm >= 8.x
+- Docker (可选，用于生产部署)
 
-### 安装依赖
+### 快速开始
 
 ```bash
-cd it-knowledge-portal
+# 1. 克隆项目
+git clone https://github.com/lcq225/ITservices.git
+cd ITservices/it-knowledge-portal
+
+# 2. 安装依赖
 npm install
-```
 
-### 开发运行
-
-```bash
+# 3. 开发模式运行
 npm run dev
 ```
 
@@ -138,11 +140,35 @@ npm run build
 
 构建产物在 `dist/` 目录
 
-### 预览构建结果
+### Docker 部署
 
 ```bash
-npm run preview
+# 启动所有服务（前端 + 后端 + 数据库）
+docker-compose up -d
+
+# 访问 http://localhost
 ```
+
+### 端口说明
+
+| 场景 | 端口 | 说明 |
+|------|------|------|
+| 开发模式 | 5173 | Vite 开发服务器（热更新） |
+| Docker 生产 | 80 | Nginx 对外端口（静态页面） |
+| 后端 API | 3000 | Node.js API 服务（内部） |
+| 数据库 | 5432 | PostgreSQL（内部） |
+| 缓存 | 6379 | Redis（内部） |
+
+### 项目配置文件
+
+| 文件 | 用途 |
+|------|------|
+| `.env.example` | 环境变量模板 |
+| `.env.development` | 开发环境变量 |
+| `vite.config.ts` | Vite 配置 |
+| `nginx.conf` | Nginx 配置 |
+| `docker-compose.yml` | Docker 编排 |
+| `Dockerfile` | Docker 构建配置 |
 
 ## 后续优化建议
 
