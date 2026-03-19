@@ -170,7 +170,7 @@ npm run dev          # 开发模式 http://localhost:3000
 | 路由 | Vue Router |
 | 状态管理 | Pinia |
 
-#### 后端 (it-services-backend)
+#### 后端 (it-knowledge-portal-backend)
 | 类别 | 技术 |
 |------|------|
 | 框架 | Node.js + Express |
@@ -179,7 +179,8 @@ npm run dev          # 开发模式 http://localhost:3000
 | 认证 | JWT |
 | 文件上传 | Multer |
 | 实时通信 | Socket.IO |
-| WebSocket | |
+| 安全中间件 | Helmet, Rate Limiting |
+| 日志 | Winston |
 
 ## 项目结构
 
@@ -250,6 +251,7 @@ ITservices/
 - **v0.2** - 完整版本，包含前端+后端API+JWT认证+WebSocket
 - **v0.3** - 安全增强版，包含Rate Limiting、日志审计、Helmet安全头
 - **v0.4** - 依赖修复版，修复 `@types/express-rate-limit` 版本问题，添加 Prisma seed 配置
+- **v0.5** - UI升级版，统一图标系统（Element Plus图标）、响应式布局、CSS变量规范化、管理后台样式增强
 
 ## License
 
