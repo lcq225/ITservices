@@ -2,6 +2,29 @@
 
 企业内部IT系统知识资讯服务的内容发布门户网站，提供知识库管理、资讯发布、问答社区、系统介绍和IT团队展示等功能。
 
+## 界面预览
+
+### 首页
+![首页](screenshots/首页.png)
+
+### 系统介绍
+![系统介绍](screenshots/系统介绍.png)
+
+### 知识库
+![知识库](screenshots/知识库.png)
+
+### 资讯中心
+![资讯中心](screenshots/资讯中心.png)
+
+### 问答社区
+![问答社区](screenshots/问答社区.png)
+
+### IT团队
+![IT团队](screenshots/IT团队.png)
+
+### 登录页
+![登录](screenshots/登录.png)
+
 ## 系统功能
 
 ### 1. 首页
