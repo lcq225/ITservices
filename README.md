@@ -248,6 +248,7 @@ ITservices/
 
 - **v0.1** - 仅前端版本，包含UI和Mock数据
 - **v0.2** - 完整版本，包含前端+后端API+JWT认证+WebSocket
+- **v0.3** - 安全增强版，包含Rate Limiting、日志审计、Helmet安全头
 
 ## License
 
