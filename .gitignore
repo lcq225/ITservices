@@ -180,3 +180,4 @@ it-knowledge-portal/.DS_Store
 *.lz
 *.lzma
 *.iso
+-e "\n# 敏感配置\n.pypirc\n.env\n.env.local\n.env.production" 
